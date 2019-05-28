@@ -8,6 +8,9 @@
 	<link rel="stylesheet" type="text/css" href="css/board.css"/>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css" />
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/movement_frontend.js"></script>
 </head>
 
 <body>
@@ -440,8 +443,8 @@
 
 		<br><br>
 		Sample stones:<br><br>
-		<img src="images/black.png" width="75px" height="75px"/>
-		&nbsp;&nbsp;
-		<img src="images/white.png" width="75px" height="75px"/>
+			<!--img class="draggable" src="images/black.png" width="75px" height="75px"/-->
+			<div id="1" class="draggable-black"></div>
+			<div id="2" class="draggable-white"></div>
 	</body>
 	</html>

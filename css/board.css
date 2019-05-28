@@ -27,6 +27,24 @@
 	border-color:black;
 }
 
+.draggable-black {
+	cursor:pointer;
+
+	width:40px;
+	height:40px;
+	background-image: url('../images/black.png');
+	background-size: 100%;
+}
+
+.draggable-white {
+	cursor:pointer;
+
+	width:40px;
+	height:40px;
+	background-image: url('../images/white.png');
+	background-size: 100%;
+}
+
 @media screen and (max-width: 767px) {
 	.tg {
 		width: auto !important;
