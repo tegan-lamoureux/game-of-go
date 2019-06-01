@@ -5,12 +5,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
 
-	<link rel="stylesheet" type="text/css" href="css/board.css"/>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css" />
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="js/movement_frontend.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/board.css"/>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css"/>
 </head>
 
 <body>
@@ -25,8 +25,16 @@
 				<h3>it's a game</h3>
 			</div>
 			<div class="col-sm">
-				settings:<br>
-				choose your color or type your name or something here
+				<label for="colorSelect">Choose a color:</label>
+        <select id="colorSelect">
+            <option value="">--Please choose a color--</option>
+            <option value="black">Black</option>
+            <option value="white">White</option>
+        </select>
+
+        <br>
+        <input id="test" type="button" value="player move" class='boardPosition'>
+
 			</div>
 		</div>
 
@@ -446,5 +454,52 @@
 			<!--img class="draggable" src="images/black.png" width="75px" height="75px"/-->
 			<div id="1" class="draggable-black"></div>
 			<div id="2" class="draggable-white"></div>
-	</body>
-	</html>
+
+
+			<script type="text/javascript">
+					var stones=0;
+					var curTurn="black";
+					var gameState={}
+					gameState.turn='black';
+					gameState.stones=0;
+					var color=null;
+					var objectSocket = io.connect('http://localhost:8080/'); // do not change this line
+
+					$('.boardPosition').on('click', function(event){
+					//$('input.boardPosition').on('click', function(){
+								 //emmit gameState
+									console.log('before emit')
+									console.log(curTurn, stones);
+									console.log(gameState)
+									objectSocket.emit('moveEvent', {
+															'turn':curTurn,
+															'stonePositions':stones
+													});
+									stones=stones+1;
+							});
+
+					objectSocket.on('moveEvent', function(objectData){
+							console.log(objectData);
+
+			//update board with objectData sent by server
+							turn=objectData.turn
+					});
+
+					$('#colorSelect').change('click', function(){
+							var selectedColor= $(this).children("option:selected").val();
+							console.log(selectedColor)
+							//emit color choice
+							objectSocket.emit('colorChoiceEvent', {
+									'colorChoice':selectedColor,
+									'currentColor': color,
+							});
+					});
+					objectSocket.on('assignColorEvent', function(objectData){
+							console.log(`assignedColor is ${objectData}`);
+							//update board with objectData sent by server
+							color= objectData;
+							console.log(`current color is ${color}`);
+					});
+			</script>
+</body>
+</html>
