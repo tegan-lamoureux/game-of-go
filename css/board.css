@@ -45,6 +45,10 @@
 	background-size: 100%;
 }
 
+.board {
+	cursor:pointer;
+}
+
 @media screen and (max-width: 767px) {
 	.tg {
 		width: auto !important;
