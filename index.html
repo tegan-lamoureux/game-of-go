@@ -459,9 +459,6 @@
 			<script type="text/javascript">
 					var stones=0;
 					var curTurn="black";
-					var gameState={}
-					gameState.turn='black';
-					gameState.stones=0;
 					var color=null;
 					var objectSocket = io.connect('http://localhost:8080/'); // do not change this line
 
@@ -470,7 +467,6 @@
 								 //emmit gameState
 									console.log('before emit')
 									console.log(curTurn, stones);
-									console.log(gameState)
 									objectSocket.emit('moveEvent', {
 															'turn':curTurn,
 															'stonePositions':stones
@@ -481,8 +477,8 @@
 					objectSocket.on('moveEvent', function(objectData){
 							console.log(objectData);
 
-			//update board with objectData sent by server
-							turn=objectData.turn
+							//update board with objectData sent by server
+							curTurn=objectData.turn
 					});
 
 					$('#colorSelect').change('click', function(){

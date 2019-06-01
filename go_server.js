@@ -15,7 +15,7 @@ var io = socket(server.listen(process.env.PORT || 8080));
 // object containing all positins
 var boardState={};
 var playerColor={};
-playerColor['black']=null; 
+playerColor['black']=null;
 playerColor['white']=null;
 
 io.on('connection', function(objectSocket) {
@@ -32,7 +32,7 @@ io.on('connection', function(objectSocket) {
 		console.log(objectData);
 		//save current game state from last move
 		boardState = objectData;
-		//reverse color 
+		//reverse color
 		if (boardState.turn == 'black'){
 			boardState.turn= 'white'
 		}
