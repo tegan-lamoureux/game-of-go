@@ -1,4 +1,4 @@
-# go-frontend
+# A Game of Go
 Term project for Fullstack Web Dev @ PSU
 
 Current repo can be found deployed @ https://fullstack-project-go.herokuapp.com/ 
