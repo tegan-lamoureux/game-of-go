@@ -5,29 +5,20 @@
 }
 
 .tg td {
-	font-family:Arial, sans-serif;
-	font-size:14px;
-	padding:10px 5px;
 	border-style:solid;
 	border-width:1px;
 	overflow:hidden;
-	word-break:normal;
 	border-color:black;
+	width:40px;
+	height:40px;
 }
 
-.tg th {
-	font-family:Arial, sans-serif;
-	font-size:14px;
-	font-weight:normal;
-	padding:10px 5px;
-	border-style:solid;
-	border-width:1px;
-	overflow:hidden;
-	word-break:normal;
-	border-color:black;
+table {
+	table-layout: fixed;
+  width: 200px;
 }
 
-.black_stone {
+.black_stone_selector {
 	cursor:pointer;
 
 	width:40px;
@@ -37,7 +28,7 @@
 	display: inline-block;
 }
 
-.white_stone {
+.white_stone_selector {
 	cursor:pointer;
 
 	width:40px;
@@ -45,6 +36,20 @@
 	background-image: url('../images/white.png');
 	background-size: 100%;
 	display: inline-block;
+}
+
+.black_stone {
+	width:40px;
+	height:40px;
+	background-image: url('../images/black.png');
+	background-size: 100%;
+}
+
+.white_stone {
+	width:40px;
+	height:40px;
+	background-image: url('../images/white.png');
+	background-size: 100%;
 }
 
 .board {

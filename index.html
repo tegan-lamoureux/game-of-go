@@ -30,9 +30,9 @@
 				<br><br>
 				<b>Choose stone to play:</b>
 				<br><br>
-				<div class="black_stone" id="black"></div>
+				<div class="black_stone_selector" id="black"></div>
 				&nbsp;&nbsp;
-				<div class="white_stone" id="white"></div>
+				<div class="white_stone_selector" id="white"></div>
         <!-- <select id="colorSelect">
             <option value="">Please choose a color</option>
             <option value="black">Black</option>
@@ -500,7 +500,7 @@
 
 
 					// Color select handlers. TODO: redundant code, refactor
-					$('.black_stone').on('click', function(event) {
+					$('.black_stone_selector').on('click', function(event) {
 						if (colorLocked === false) {
 							var selectedColor= $(this).attr('id');
 							console.log(selectedColor)
@@ -511,7 +511,7 @@
 							});
 						}
 					});
-					$('.white_stone').on('click', function(event) {
+					$('.white_stone_selector').on('click', function(event) {
 						if (colorLocked === false) {
 							var selectedColor= $(this).attr('id');
 							console.log(selectedColor)
@@ -596,9 +596,11 @@
 						for (var key in positions) {
 							if (positions[key] === 1) {
 								$('#' + key).addClass('black_stone');
+								$('#' + key).html('');
 							}
 							else if (positions[key] === 2) {
 								$('#' + key).addClass('white_stone');
+								$('#' + key).html('');
 							}
 						}
 					}
