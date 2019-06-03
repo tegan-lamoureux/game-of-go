@@ -81,6 +81,11 @@ io.on('connection', function(objectSocket) {
 		io.to(objectSocket.id).emit('assignColorEvent', assignedColor);
 
 		//update other players color choices
+
+		// Let players know the game can start
+		if (playerColor['white']!==null && playerColor['black']!==null) {
+			io.emit('ready');
+		}
 	});
 
 	objectSocket.on('disconnect', function() {

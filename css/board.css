@@ -27,22 +27,24 @@
 	border-color:black;
 }
 
-.draggable-black {
+.black_stone {
 	cursor:pointer;
 
 	width:40px;
 	height:40px;
 	background-image: url('../images/black.png');
 	background-size: 100%;
+	display: inline-block;
 }
 
-.draggable-white {
+.white_stone {
 	cursor:pointer;
 
 	width:40px;
 	height:40px;
 	background-image: url('../images/white.png');
 	background-size: 100%;
+	display: inline-block;
 }
 
 .board {
