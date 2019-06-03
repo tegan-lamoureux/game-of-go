@@ -493,20 +493,9 @@
 							// Update board with objectData sent by server.
 							curTurn=objectData.turn;
 							positions = Object.assign({}, objectData.stonePositions);
+							ParseAndPopulateBoard(positions);
 
 							$('.turnDisplay').html(curTurn);
-					});
-
-
-					// Handler when player selects a color.
-					$('#colorSelect').change('click', function(){
-							var selectedColor= $(this).children("option:selected").val();
-							console.log(selectedColor)
-							//emit color choice
-							objectSocket.emit('colorChoiceEvent', {
-									'colorChoice':selectedColor,
-									'currentColor': color,
-							});
 					});
 
 
@@ -572,11 +561,11 @@
 
 					// Set the appropriate move in the board structure.
 					function RecordMove(position, color, positions) {
-						if (color == 'black') {
+						if (color === 'black') {
 							positions[position] = 1;
 						}
 						else {
-							positions[$(this).attr('id')] = 2;
+							positions[position] = 2;
 						}
 					}
 
@@ -597,6 +586,19 @@
 							for(var j = 1; j <= size; j++) {
 								coord = i.toString() + '-' + j.toString();
 								positions[coord] = 0;
+							}
+						}
+					}
+
+
+					// Parse board structure and populate stones.
+					function ParseAndPopulateBoard(positions) {
+						for (var key in positions) {
+							if (positions[key] === 1) {
+								$('#' + key).addClass('black_stone');
+							}
+							else if (positions[key] === 2) {
+								$('#' + key).addClass('white_stone');
 							}
 						}
 					}
