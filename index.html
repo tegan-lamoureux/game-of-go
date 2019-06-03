@@ -7,7 +7,7 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/board.css"/>
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css"/>
 </head>
@@ -461,7 +461,7 @@
 					var curTurn = 'black';
 					var color = null;
 					var positions = {};
-					var objectSocket = io.connect('http://localhost:8080/');
+					var objectSocket = io();
 
 					// Set up the game board.
 					InitializeBoard(positions, 19);
