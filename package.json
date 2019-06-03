@@ -1,0 +1,25 @@
+{
+  "name": "go-frontend",
+  "version": "1.0.0",
+  "description": "Term project for Fullstack Web Dev @ PSU",
+  "main": "go_server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tegan-lamoureux/go-frontend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tegan-lamoureux/go-frontend/issues"
+  },
+  "homepage": "https://github.com/tegan-lamoureux/go-frontend#readme"
+}
