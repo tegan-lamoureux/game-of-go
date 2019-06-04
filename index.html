@@ -456,157 +456,145 @@
 
 		</div>
 
-			<script type="text/javascript">
-					var colorLocked = false;
-					var curTurn = 'black';
-					var color = null;
-					var positions = {};
-					var objectSocket = io();
+		<script type="text/javascript">
+				var colorLocked = false;
+				var curTurn = 'black';
+				var color = null;
+				var positions = {};
+				var objectSocket = io();
 
-					// Set up the game board.
-					InitializeBoard(positions, 19);
-					console.log('board structure initialized: ');
-					console.log(positions);
+				// Set up the game board.
+				console.log('board structure initialized: ');
+				console.log(positions);
 
-					// Default starting messages.
-					$('.turnDisplay').html('Waiting for second player...');
-					$('.colorDisplay').html('Select a color please.');
-
-
-					// Handler for board space click event.
-					$('.board').on('click', function(event) {
-						var boardClickPosition = $(this).attr('id');
-						console.log('board click: ' + boardClickPosition);
-
-						if(ValidateTurn(curTurn, color, positions, boardClickPosition)) {
-							RecordMove(boardClickPosition, color, positions);
-							BroadcastMove(positions, curTurn);
-						}
-					});
+				// Default starting messages.
+				$('.turnDisplay').html('Waiting for second player...');
+				$('.colorDisplay').html('Select a color please.');
 
 
-					// Handler to receive move event from server.
-					objectSocket.on('moveEvent', function(objectData){
-							console.log(objectData);
+				// Handler for board space click event.
+				$('.board').on('click', function(event) {
+					var boardClickPosition = $(this).attr('id');
+					console.log('board click: ' + boardClickPosition);
 
-							// Update board with objectData sent by server.
-							curTurn=objectData.turn;
-							positions = Object.assign({}, objectData.stonePositions);
-							ParseAndPopulateBoard(positions);
-
-							$('.turnDisplay').html(curTurn);
-					});
-
-
-					// Color select handlers. TODO: redundant code, refactor
-					$('.black_stone_selector').on('click', function(event) {
-						if (colorLocked === false) {
-							var selectedColor= $(this).attr('id');
-							console.log(selectedColor)
-							//emit color choice
-							objectSocket.emit('colorChoiceEvent', {
-									'colorChoice':selectedColor,
-									'currentColor': color,
-							});
-						}
-					});
-					$('.white_stone_selector').on('click', function(event) {
-						if (colorLocked === false) {
-							var selectedColor= $(this).attr('id');
-							console.log(selectedColor)
-							//emit color choice
-							objectSocket.emit('colorChoiceEvent', {
-									'colorChoice':selectedColor,
-									'currentColor': color,
-							});
-						}
-					});
-
-
-					// Handle assignment event from server.
-					objectSocket.on('assignColorEvent', function(objectData){
-						alert('You\'ve been assigned the stone color: ' + objectData);
-						colorLocked = true;
-						color = objectData;
-						$('.colorDisplay').html(color);
-					});
-
-
-					// Handle ready to play event from server.
-					objectSocket.on('ready', function(){
-						alert('The game has started! Current turn: Black.');
-						curTurn = 'black';
-						$('.turnDisplay').html('black');
-					});
-
-
-					// Validate the player can make a move when the board is clicked. Alert
-					// if they can't with appropriate message.
-					function ValidateTurn(curTurn, color, positions, boardClickPosition) {
-						var validTurn = true;
-
-						if (color === null) {
-							alert('You must select a color first.');
-							validTurn = false;
-						}
-						else if(curTurn !== color || curTurn === undefined) {
-							// Check that it's our turn to move.
-							validTurn = false;
-						}
-						else if(positions[boardClickPosition] !== 0) {
-							// Check that we aren't overwriting an existing cell.
-							validTurn = false;
-						}
-
-						return validTurn;
+					if(ValidateTurn(curTurn, color, positions, boardClickPosition)) {
+						RecordMove(boardClickPosition, color, positions);
+						BroadcastMove(positions, curTurn);
 					}
+				});
 
 
-					// Set the appropriate move in the board structure.
-					function RecordMove(position, color, positions) {
-						if (color === 'black') {
-							positions[position] = 1;
-						}
-						else {
-							positions[position] = 2;
-						}
-					}
+				// Handler to receive move event from server.
+				objectSocket.on('moveEvent', function(objectData){
+						console.log(objectData);
+
+						// Update board with objectData sent by server.
+						curTurn=objectData.turn;
+						positions = Object.assign({}, objectData.stonePositions);
+						ParseAndPopulateBoard(positions);
+
+						$('.turnDisplay').html(curTurn);
+				});
 
 
-					// Build and send data message to server.
-					function BroadcastMove(positions, turn) {
-						objectSocket.emit('moveEvent', {
-							'turn':turn,
-							'stonePositions': positions
+				// Color select handlers. TODO: redundant code, refactor
+				$('.black_stone_selector').on('click', function(event) {
+					if (colorLocked === false) {
+						var selectedColor= $(this).attr('id');
+						console.log(selectedColor)
+						//emit color choice
+						objectSocket.emit('colorChoiceEvent', {
+								'colorChoice':selectedColor,
+								'currentColor': color,
 						});
 					}
+				});
+				$('.white_stone_selector').on('click', function(event) {
+					if (colorLocked === false) {
+						var selectedColor= $(this).attr('id');
+						console.log(selectedColor)
+						//emit color choice
+						objectSocket.emit('colorChoiceEvent', {
+								'colorChoice':selectedColor,
+								'currentColor': color,
+						});
+					}
+				});
 
 
-					// Set up the board structure with the given size.
-					function InitializeBoard(positions, size) {
-						var coord = '';
-						for(var i = 1; i <= size; i++) {
-							for(var j = 1; j <= size; j++) {
-								coord = i.toString() + '-' + j.toString();
-								positions[coord] = 0;
-							}
-						}
+				// Handle assignment event from server.
+				objectSocket.on('assignColorEvent', function(objectData){
+					alert('You\'ve been assigned the stone color: ' + objectData);
+					colorLocked = true;
+					color = objectData;
+					$('.colorDisplay').html(color);
+				});
+
+
+				// Handle ready to play event from server.
+				objectSocket.on('ready', function(stonePositions){
+					alert('The game has started! Current turn: Black.');
+					curTurn = 'black';
+					positions = Object.assign({}, stonePositions);
+					$('.turnDisplay').html('black');
+				});
+
+
+				// Validate the player can make a move when the board is clicked. Alert
+				// if they can't with appropriate message.
+				function ValidateTurn(curTurn, color, positions, boardClickPosition) {
+					var validTurn = true;
+
+					if (color === null) {
+						alert('You must select a color first.');
+						validTurn = false;
+					}
+					else if(curTurn !== color || curTurn === undefined) {
+						// Check that it's our turn to move.
+						validTurn = false;
+					}
+					else if(positions[boardClickPosition] !== 0) {
+						// Check that we aren't overwriting an existing cell.
+						validTurn = false;
 					}
 
+					return validTurn;
+				}
 
-					// Parse board structure and populate stones.
-					function ParseAndPopulateBoard(positions) {
-						for (var key in positions) {
-							if (positions[key] === 1) {
-								$('#' + key).addClass('black_stone');
-								$('#' + key).html('');
-							}
-							else if (positions[key] === 2) {
-								$('#' + key).addClass('white_stone');
-								$('#' + key).html('');
-							}
+
+				// Set the appropriate move in the board structure.
+				function RecordMove(position, color, positions) {
+					if (color === 'black') {
+						positions[position] = 1;
+					}
+					else {
+						positions[position] = 2;
+					}
+				}
+
+
+				// Build and send data message to server.
+				function BroadcastMove(positions, turn) {
+					objectSocket.emit('moveEvent', {
+						'turn':turn,
+						'stonePositions': positions
+					});
+				}
+
+
+				// Parse board structure and populate stones.
+				function ParseAndPopulateBoard(positions) {
+					for (var key in positions) {
+						if (positions[key] === 1) {
+							$('#' + key).addClass('black_stone');
+							$('#' + key).html('');
+						}
+						else if (positions[key] === 2) {
+							$('#' + key).addClass('white_stone');
+							$('#' + key).html('');
 						}
 					}
-			</script>
+				}
+		</script>
 </body>
 </html>
