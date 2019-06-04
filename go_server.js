@@ -24,7 +24,9 @@ io.on('connection', function(objectSocket) {
 
 	//if new client and move has already been made. give them the
 	//current board positions/turn info
-	if (boardState !== 0){
+	// Check that positions aren't null and that the 1,1 location exists
+	// inside it.
+	if (boardState.stonePositions !== undefined && ('1-1' in boardState.stonePositions)){
 		io.emit('moveEvent', boardState);
 	}
 
@@ -87,17 +89,17 @@ io.on('connection', function(objectSocket) {
 
 		// Let players know the game can start
 		if (playerColor['white']!==null && playerColor['black']!==null) {
-			var positions={}
+			// Initialize the game board.
+			var positions={};
 			var coord = '';
-			for(var i = 1; i <= size; i++) {
-				for(var j = 1; j <= size; j++) {
+			for(var i = 1; i <= 19; i++) {
+				for(var j = 1; j <= 19; j++) {
 					coord = i.toString() + '-' + j.toString();
 					positions[coord] = 0;
 				}
 			}
-			io.emit('ready',
-				positions	
-			);
+
+			io.emit('ready', positions);
 		}
 	});
 
@@ -106,7 +108,7 @@ io.on('connection', function(objectSocket) {
 			playerColor['black']=null;
 		}
 		if(playerColor['white']=== objectSocket.id){
-			playerColor['black']=null;
+			playerColor['white']=null;
 		}
 		console.log('client disconnected');
 	});
@@ -121,10 +123,10 @@ function check_stone(coord, positions, size){
     var y= parseInt(coordArr[1]);
     var isFree=false;
     var checked=[];
-    //console.log('check_stone', coord, x, y) 
+    //console.log('check_stone', coord, x, y)
     //assume captured unless you find freedom in adjacent spot
     //or connnected stone has adjacent spot
-    isFree=has_freedom(x, y, checked, positions, size);    
+    isFree=has_freedom(x, y, checked, positions, size);
     //console.log(coord,'isFree=', isFree);
 
     if(isFree == false){
@@ -165,7 +167,7 @@ function has_freedom(x, y, oldCheckList, positions, size){
         return true
     }
 
-    //if neigbor is same color, recursivly check it 
+    //if neigbor is same color, recursivly check it
     if (x>1 && color === get_val(x-1, y, positions) && not_checked(x-1, y, checkList)){
         leftFreedom = has_freedom(x-1, y, checkList, positions, size)
     }
@@ -180,7 +182,7 @@ function has_freedom(x, y, oldCheckList, positions, size){
     if (y<19 && color === get_val(x, y+1, positions) && not_checked(x, y+1, checkList)){
         bottomFreedom = has_freedom(x, y+1, checkList, positions, size)
     }
-    
+
     if(rightFreedom || leftFreedom || topFreedom || bottomFreedom){
         return true;
     }
@@ -200,9 +202,9 @@ function capture(x, y, positions, size){
     //get color of space
     color=positions[coord];
 
-    //change space to empty 
+    //change space to empty
     //console.log('capturing ', coord)
-    positions[coord]=0;   
+    positions[coord]=0;
 
     //if neightbor is same color call on neighbor
     if (x>1 && color === get_val(x-1, y, positions)){
@@ -235,7 +237,7 @@ function print_board(positions, size){
     line='';
     for(var i=1; i<size+1; i=i+1){
         for(var j=1; j<size+1; j=j+1){
-            coord=i.toString() + '-' + j.toString(); 
+            coord=i.toString() + '-' + j.toString();
             //console.log(coord)
             line = line + positions[coord] + '  ';
             //console.log(get_val(i, j, positions))
@@ -248,7 +250,7 @@ function print_board(positions, size){
 function check_board(positions, size){
     for(var i=1; i<size+1; i=i+1){
         for(var j=1; j<size+1; j=j+1){
-            coord=i.toString() + '-' + j.toString(); 
+            coord=i.toString() + '-' + j.toString();
             //console.log('check_board', coord);
             check_stone(coord, positions, size);
         }

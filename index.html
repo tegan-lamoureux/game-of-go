@@ -549,11 +549,11 @@
 							alert('You must select a color first.');
 							validTurn = false;
 						}
-						else if(curTurn !== color || curTurn == undefined) {
-							alert("It's not your turn.");
+						else if(curTurn !== color || curTurn === undefined) {
+							// Check that it's our turn to move.
 							validTurn = false;
 						}
-						else if(boardClickPosition in positions) {
+						else if(positions[boardClickPosition] !== 0) {
 							// Check that we aren't overwriting an existing cell.
 							validTurn = false;
 						}
