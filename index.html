@@ -475,11 +475,10 @@
 
 					// Handler for board space click event.
 					$('.board').on('click', function(event) {
-						console.log('board click: ' + $(this).attr('id'));
+						var boardClickPosition = $(this).attr('id');
+						console.log('board click: ' + boardClickPosition);
 
-						if(ValidateTurn(curTurn, color)) {
-							var boardClickPosition = $(this).attr('id');
-
+						if(ValidateTurn(curTurn, color, positions, boardClickPosition)) {
 							RecordMove(boardClickPosition, color, positions);
 							BroadcastMove(positions, curTurn);
 						}
@@ -543,7 +542,7 @@
 
 					// Validate the player can make a move when the board is clicked. Alert
 					// if they can't with appropriate message.
-					function ValidateTurn(curTurn, color) {
+					function ValidateTurn(curTurn, color, positions, boardClickPosition) {
 						var validTurn = true;
 
 						if (color === null) {
@@ -552,6 +551,10 @@
 						}
 						else if(curTurn !== color || curTurn == undefined) {
 							alert("It's not your turn.");
+							validTurn = false;
+						}
+						else if(boardClickPosition in positions) {
+							// Check that we aren't overwriting an existing cell.
 							validTurn = false;
 						}
 
