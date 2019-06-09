@@ -72,7 +72,7 @@ io.on('connection', function(objectSocket) {
         var passCount=0;
         playerColor['black']=null;
         playerColor['white']=null;
-        
+
         var positions={};
         var coord = '';
         for(var i = 1; i <= 19; i++) {
@@ -115,29 +115,17 @@ io.on('connection', function(objectSocket) {
 			console.log('color is available');
 			playerColor[objectData.colorChoice]=objectSocket.id;
 			assignedColor=objectData.colorChoice;
-
-			//remove client id from other color if necesary if player is reversing color
-			if(objectData.colorChoice == 'black' && playerColor['white'] === objectSocket.id){
-				playerColor['white'] = null;
-			}
-			if(objectData.colorChoice == 'white' && playerColor['black'] === objectSocket.id){
-				playerColor['black'] = null;
-			}
 		}
 		//if they chose black and white available
 		else if((objectData.colorChoice == 'black') && (playerColor['white']===null)){
 			console.log('player chose black but white is available');
 			assignedColor='white'
+			playerColor[assignedColor]=objectSocket.id;
 		}
 		//if they chose white, check black
 		else if((objectData.colorChoice == 'white') && (playerColor['black'] ===null)){
 			console.log('player chose white but black is available');
-			assignedColor= 'black'
-		}
-		//assign observer color=none
-		else{
-			console.log('no color assigned')
-			assignedColor=objectData.currentColor
+			playerColor[assignedColor]=objectSocket.id;
 		}
 
 		//send assigned color back to player
