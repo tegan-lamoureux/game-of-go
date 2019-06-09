@@ -68,6 +68,23 @@ io.on('connection', function(objectSocket) {
 		io.emit('moveEvent', boardState);
     });
 
+    objectSocket.on('newGame', function(){
+        var passCount=0;
+        playerColor['black']=null;
+        playerColor['white']=null;
+        
+        var positions={};
+        var coord = '';
+        for(var i = 1; i <= 19; i++) {
+            for(var j = 1; j <= 19; j++) {
+                coord = i.toString() + '-' + j.toString();
+                positions[coord] = 0;
+            }
+        }
+        boardState.turn='black';
+        boardState.stonePositions=positions;
+        io.emit('moveEvent', boardState);
+    });
 
 	objectSocket.on('moveEvent', function(objectData) {
         var size=19;
