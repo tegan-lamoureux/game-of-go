@@ -15,6 +15,8 @@ var io = socket(server.listen(process.env.PORT || 8080));
 // object containing all positins
 var boardState={};
 var playerColor={};
+var passCount=0;
+var size=19;
 playerColor['black']=null;
 playerColor['white']=null;
 
@@ -31,6 +33,31 @@ io.on('connection', function(objectSocket) {
 	}
 
     objectSocket.on('passEvent', function(){
+        var gameWinner='';
+        passCount=PassCount + 1;
+        if (passCount === 2){
+            //score board
+            var scoreObj={};
+            scoreObj= score_board(boardState.stonePositions, size);
+            console.log('black score: ', scoreObj.black);
+            console.log('white score: ', scoreObj.white);
+            
+            if(scoreObj.black>scoreObj.white){
+                gameWinner='black';
+            }
+            if(scoreObj.black<scoreObj.white){
+                gameWinner='white';
+            }
+            if(scoreObj.black === scoreObj.white){
+                gameWinner='tie';
+            }
+
+		    io.emit('gameOver', {
+                'winner': gameWinner,
+                'blackScore': scoreObj.black,
+                'whiteScore': scoreObj.white
+            });
+        }
 		if (boardState.turn == 'black'){
 			boardState.turn= 'white'
 		}
@@ -42,7 +69,8 @@ io.on('connection', function(objectSocket) {
     
 
 	objectSocket.on('moveEvent', function(objectData) {
-		var size=19;
+        var size=19;
+        passCount=0;
 		//console.log(objectData);
 		//save current game state from last move
 		boardState = objectData;
@@ -129,6 +157,118 @@ io.on('connection', function(objectSocket) {
 console.log('go ahead and open "http://localhost:8080/go_client_test.html" in your browser');
 
 console.log(playerColor['white']);
+// ------------------------------------------------------------------------
+//                               scoring 
+// -------------------------------------------------------------------------
+
+function score_board(positions, size){
+    var scoreObj=new Object();
+    scoreObj.black=0;
+    scoreObj.white=0;
+    var color=null;
+    seenList=[];
+
+    for(var i=1; i<size+1; i=i+1){
+        for(var j=1; j<size+1; j=j+1){
+            coord=i.toString() + '-' + j.toString(); 
+            //get color of current vertex
+            color= get_val(i, j, positions)
+            if(color === 1){
+                scoreObj.black=scoreObj.black + 1
+            }
+            else if(color===2){
+                scoreObj.white=scoreObj.white+1
+            }
+            else{
+                //if blank and not already checked
+                if(not_checked(i, j, seenList)){
+                    //count white spaces and determined if surrounded
+                    //return black, white, score, checkedList
+                    var emptyGroupObj= new Object();
+                    emptyGroupObj.black=false;
+                    emptyGroupObj.white=false;
+                    emptyGroupObj.areaTotal=0;
+                    //console.log('scoring empty group starting at ', coord);
+                    score_empty_spaces(coord, seenList, emptyGroupObj);
+                    //console.log(emptyGroupObj);
+                    //console.log();
+                    if(emptyGroupObj.black=== true && emptyGroupObj.white===false){
+                        scoreObj.black= scoreObj.black + emptyGroupObj.areaTotal;
+                    }
+                    if(emptyGroupObj.black=== false && emptyGroupObj.white===true){
+                        scoreObj.white= scoreObj.white + emptyGroupObj.areaTotal;
+                    }
+                }
+            }
+        }
+    }
+    return scoreObj
+}
+
+
+function score_empty_spaces(coordStr, seenList, emptyGroupObj){
+    coordArr=coordStr.split('-')
+    var size=19;
+    var x= parseInt(coordArr[0]);
+    var y= parseInt(coordArr[1]);
+    black=1;
+    white=2;
+
+    //add stuff for the square
+    seenList.push(coordStr);
+    emptyGroupObj.areaTotal=emptyGroupObj.areaTotal+1;
+
+    //check surrounding squares
+    //if black or white add true to emptyGroupObj
+    //if empty call count_blank_spaces on it
+    //check left - fixed
+    if(y>1 && black === get_val(x, y-1, positions)){
+        emptyGroupObj.black=true;
+    }
+    if(y>1 && white === get_val(x, y-1, positions)){
+        emptyGroupObj.white=true;
+    }
+    if(y>1 && 0 === get_val(x, y-1, positions) && not_checked(x, y-1, seenList)){
+        score_empty_spaces(coord_str(x, y-1), seenList, emptyGroupObj);
+    }
+    //right - fixed
+    if(y<size && black === get_val(x, y+1, positions)){
+        emptyGroupObj.black=true; 
+    }
+    if(y<size && white === get_val(x, y+1, positions)){
+        emptyGroupObj.white=true; 
+    }
+    if (y<size && 0 === get_val(x, y+1, positions) && not_checked(x, y+1, seenList)){
+        score_empty_spaces(coord_str(x, y+1), seenList, emptyGroupObj);
+    }
+    //check above - fixed
+    if(x<size && black === get_val(x+1, y, positions)){
+        emptyGroupObj.black=true;
+    }
+    if(x<size && white === get_val(x+1, y, positions)){
+        emptyGroupObj.white=true; 
+    }
+    if (x<size && 0 === get_val(x+1, y, positions) && not_checked(x+1, y, seenList)){
+        score_empty_spaces(coord_str(x+1, y), seenList, emptyGroupObj);
+    }
+    //check below
+    if(x>1 && black === get_val(x-1, y, positions)){
+        emptyGroupObj.black=true;
+    }
+    if(x>1 && white === get_val(x-1, y, positions)){
+        emptyGroupObj.white=true; 
+    }
+    if (x>1 && 0 === get_val(x-1, y, positions) && not_checked(x-1, y, seenList)){
+        score_empty_spaces(coord_str(x-1, y), seenList, emptyGroupObj);
+    }
+}
+
+function coord_str(x, y){
+    var xStr= x.toString();
+    var yStr= y.toString();
+    var coordStr =xStr + '-' + yStr;
+    return coordStr; 
+}
 
 // ------------------------------------------------------------------------
 //                               capturing 
@@ -148,6 +288,7 @@ function check_stone(coord, positions, size){
 
     if(isFree === false){
        print_board(positions, size);
+       console.log();
        capture(x, y, positions, size);
        //console.log();
        //print_board(positions, size);
@@ -211,7 +352,7 @@ function has_freedom(x, y, oldCheckList, positions, size){
     }
     //check below - DONE
     //if (y<19 && color === get_val(x, y+1, positions) && not_checked(x, y+1, checkList)){
-    if (x<1 && color === get_val(x-1, y, positions) && not_checked(x-1, y, checkList)){
+    if (x>1 && color === get_val(x-1, y, positions) && not_checked(x-1, y, checkList)){
         //bottomFreedom = has_freedom(x, y+1, checkList, positions, size)
         bottomFreedom = has_freedom(x-1, y, checkList, positions, size)
     }
