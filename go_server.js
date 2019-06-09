@@ -34,7 +34,7 @@ io.on('connection', function(objectSocket) {
 
     objectSocket.on('passEvent', function(){
         var gameWinner='';
-        passCount=PassCount + 1;
+        passCount=passCount + 1;
         if (passCount === 2){
             //score board
             var scoreObj={};
