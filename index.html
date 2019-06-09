@@ -23,17 +23,21 @@
 			</div>
 			<div class="col-sm">
 				<br><br>
-				<b>Your color:</b> <p class="colorDisplay"></p>
-				<b>Current turn:</b> <p class="turnDisplay"></p>
+				<b>Current turn:</b>
+				<h4><span class="turnDisplay badge badge-secondary">Current turn: Black</span><br></h4>
 				<button type="button" class="btn btn-primary" id="pass-turn">Pass Turn</button>
 			</div>
 			<div class="col-sm">
 				<br><br>
-				<b>Choose stone to play:</b>
-				<br><br>
-				<div class="black_stone_selector" id="black"></div>
+				<p class="stone-label"><b>Choose stone to play:</b></p>
+
+				<button type="button" class="black_stone_selector btn btn-dark btn-block" id="black">Black Stone</button>
+				<button type="button" class="white_stone_selector btn btn-light btn-block" id="white">White Stone</button>
+
+
+				<!-- <div class="black_stone_selector" id="black"></div>
 				&nbsp;&nbsp;
-				<div class="white_stone_selector" id="white"></div>
+				<div class="white_stone_selector" id="white"></div> -->
         <!-- <select id="colorSelect">
             <option value="">Please choose a color</option>
             <option value="black">Black</option>
@@ -470,8 +474,6 @@
 
 				// Default starting messages.
 				$('.turnDisplay').html('Waiting for second player...');
-				$('.colorDisplay').html('Select a color please.');
-
 
 				// Handler for board space click event.
 				$('.board').on('click', function(event) {
@@ -494,12 +496,19 @@
 						positions = Object.assign({}, objectData.stonePositions);
 						ParseAndPopulateBoard(positions);
 
-						$('.turnDisplay').html(curTurn);
+						if (curTurn === 'black') {
+							$('.turnDisplay').html('Black Stone');
+						}
+						else {
+							$('.turnDisplay').html('White Stone');
+						}
 				});
 
 
 				$('#pass-turn').on('click', function(event) {
-					objectSocket.emit('passEvent');
+					if(color !== null && curTurn === color && curTurn !== undefined) {
+						objectSocket.emit('passEvent');
+					}
 				});
 
 
@@ -530,10 +539,17 @@
 
 				// Handle assignment event from server.
 				objectSocket.on('assignColorEvent', function(objectData){
-					alert('You\'ve been assigned the stone color: ' + objectData);
 					colorLocked = true;
 					color = objectData;
-					$('.colorDisplay').html(color);
+
+					if (color === 'white') {
+						$('.stone-label').html('<b>You are playing:</b>');
+						$('.black_stone_selector').hide();
+					}
+					else if (color === 'black') {
+						$('.stone-label').html('<b>You are playing:</b>');
+						$('.white_stone_selector').hide();
+					}
 				});
 
 
@@ -542,7 +558,18 @@
 					alert('The game has started! Current turn: Black.');
 					curTurn = 'black';
 					positions = Object.assign({}, stonePositions);
-					$('.turnDisplay').html('black');
+					$('.turnDisplay').html('Black');
+				});
+
+
+				// End of ghame vent
+				objectSocket.on('gameOver', function(data){
+					// winner, blackScore, whiteScore
+					alert('The game has ended! Winner was ' + data.winner + ". Scores - White: " + data.whiteScore + " Black: " + data.blackScore + ".");
+					positions = {};
+					curTurn = "";
+					color = "";
+					$('.turnDisplay').html('Game Over');
 				});
 
 
