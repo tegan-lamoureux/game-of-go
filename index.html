@@ -25,6 +25,7 @@
 				<br><br>
 				<b>Your color:</b> <p class="colorDisplay"></p>
 				<b>Current turn:</b> <p class="turnDisplay"></p>
+				<button type="button" class="btn btn-primary" id="pass-turn">Pass Turn</button>
 			</div>
 			<div class="col-sm">
 				<br><br>
@@ -494,6 +495,11 @@
 						ParseAndPopulateBoard(positions);
 
 						$('.turnDisplay').html(curTurn);
+				});
+
+
+				$('#pass-turn').on('click', function(event) {
+					objectSocket.emit('passEvent');
 				});
 
 
