@@ -30,6 +30,17 @@ io.on('connection', function(objectSocket) {
 		io.emit('moveEvent', boardState);
 	}
 
+    objectSocket.on('passEvent', function(){
+		if (boardState.turn == 'black'){
+			boardState.turn= 'white'
+		}
+		else{
+			boardState.turn= 'black'
+		}
+		io.emit('moveEvent', boardState);
+    });
+    
+
 	objectSocket.on('moveEvent', function(objectData) {
 		var size=19;
 		//console.log(objectData);
@@ -118,6 +129,10 @@ io.on('connection', function(objectSocket) {
 console.log('go ahead and open "http://localhost:8080/go_client_test.html" in your browser');
 
 console.log(playerColor['white']);
+
+// ------------------------------------------------------------------------
+//                               capturing 
+// -------------------------------------------------------------------------
 
 function check_stone(coord, positions, size){
     var coordArr=coord.split('-')
