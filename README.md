@@ -1,7 +1,7 @@
 # A Game of Go
 Term project for Fullstack Web Dev @ PSU
 
-Current repo can be found deployed @ https://fullstack-project-go.herokuapp.com/ 
+Current commit on master branch can be found automatically deployed @ https://fullstack-project-go.herokuapp.com/ 
 
 #### Attributions:
 * Go stone images are licenced under Creative Commons Attribution-ShareAlike 3.0 and were taken from:
