@@ -12,18 +12,17 @@
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css"/>
 </head>
 
-<body class="container-fluid bg-custom-forest">
+<body class="container-fluid background-class bg-custom-forest">
 	<div>
 
 		<!-- Header row. -->
-		<div class="row align-items-start">
-			<div class="col-sm">
+		<div class="container">
+		<div class="row align-items-start justify-content-md-center">
+			<div class="col-5">
 				<br><br>
 				<h1>Go!</h2>
 			</div>
-			<div class="col-sm">
-			</div>
-			<div class="col-sm">
+			<div class="col-3">
 				<br><br>
 				<p class="stone-label"><b>Choose stone to play:</b></p>
 
@@ -35,6 +34,7 @@
 				<h4><span class="turnDisplay badge badge-secondary">Current turn: Black</span><br></h4>
 			</div>
 		</div>
+	</div>
 
 		<br><br>
 
@@ -447,9 +447,10 @@
 
 
 			<!-- Background select. -->
-			<div class="row">
-				<div class="col-xl tg-wrap">
-					<br><br><br><br><br>
+			<div class="container">
+			<div class="row align-items-start justify-content-md-center">
+				<div class="col-5">
+					<br><br><br>
 					<button style="display: inline-block;" type="button" class="bg-select btn btn-outline-secondary" id="ocean">Sea Grass</button>
 					<button style="display: inline-block;" type="button" class="bg-select btn btn-outline-secondary" id="forest">Forest</button>
 					<button style="display: inline-block;" type="button" class="bg-select btn btn-outline-secondary" id="flower">Field</button>
@@ -457,6 +458,7 @@
 					<button style="display: inline-block;" type="button" class="bg-select btn btn-outline-secondary" id="white">White</button>
 				</div>
 			</div>
+		</div>
 
 	</div>
 
@@ -516,12 +518,12 @@
 			$('.bg-select').on('click', function(event) {
 				var selectedBg = $(this).attr('id');
 
-					$('.container-fluid').removeClass('bg-custom-flower');
-					$('.container-fluid').removeClass('bg-custom-rainy');
-					$('.container-fluid').removeClass('bg-custom-ocean');
-					$('.container-fluid').removeClass('bg-custom-forest');
-					$('.container-fluid').removeClass('bg-custom-white');
-					$('.container-fluid').addClass('bg-custom-' + selectedBg);
+					$('.background-class').removeClass('bg-custom-flower');
+					$('.background-class').removeClass('bg-custom-rainy');
+					$('.background-class').removeClass('bg-custom-ocean');
+					$('.background-class').removeClass('bg-custom-forest');
+					$('.background-class').removeClass('bg-custom-white');
+					$('.background-class').addClass('bg-custom-' + selectedBg);
 
 					if (selectedBg === 'white') {
 						$('table').addClass('table-shadow');
