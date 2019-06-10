@@ -15,26 +15,64 @@
 table {
 	table-layout: fixed;
   width: 200px;
+}
+
+.table-shadow {
 	box-shadow: 10px 10px 5px grey;
 }
 
-.black_stone_selector {
-	/* cursor:pointer;
+html, body {
+    height: 100%;
+}
+.container-fluid {
+    height: 100%;
+		overflow-y: visible;
+}
 
-	width:40px;
-	height:40px;
-	background-image: url('../images/black.png');
-	background-size: 100%; */
+.bg-custom-forest {
+   background: url('../images/forest.jpg') no-repeat center center fixed;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.bg-custom-flower {
+   background: url('../images/flower.jpg') no-repeat center center fixed;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.bg-custom-ocean {
+   background: url('../images/ocean.jpg') no-repeat center center fixed;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.bg-custom-rainy {
+   background: url('../images/rainy.jpg') no-repeat center center fixed;
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.bg-custom-white {
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+}
+
+.black_stone_selector {
 	display: inline-block;
 }
 
 .white_stone_selector {
-	/* cursor:pointer;
-
-	width:40px;
-	height:40px;
-	background-image: url('../images/white.png');
-	background-size: 100%; */
 	display: inline-block;
 }
 
